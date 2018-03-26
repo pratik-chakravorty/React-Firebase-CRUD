@@ -10,9 +10,9 @@ class App extends React.Component {
     super();
     this.state = {
       items: [],
-      editing:false,
-      index:null,
-      loading:true
+      editing: false,
+      index: null,
+      loading: true
     }
     this.handleAdd = this.handleAdd.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
@@ -26,75 +26,79 @@ class App extends React.Component {
     let newItems = this.state.items;
     newItems.push(value);
     this.setState({
-      items:newItems
+      items: newItems
     })
     this.getInput.value = ''
   }
 
   handleRemove(index) {
     let newItems = this.state.items;
-    newItems.splice(index,1);
+    newItems.splice(index, 1);
     this.setState({
-      items:newItems
+      items: newItems
     })
   }
 
   handleEdit(index) {
-      this.setState({
-        index:index,
-        editing:true
-      })
-      this.getInput.value = this.state.items[index]
+    this.setState({
+      index: index,
+      editing: true
+    })
+    this.getInput.value = this.state.items[index]
 
   }
 
   edit(e) {
-      e.preventDefault();
-      let index = this.state.index;
-      let newItems = this.state.items;
-      newItems[index] = this.getInput.value;
-      this.setState({
-        items:newItems,
-        editing:false
-      })
-      this.getInput.value = '';
+    e.preventDefault();
+    let index = this.state.index;
+    let newItems = this.state.items;
+    newItems[index] = this.getInput.value;
+    this.setState({
+      items: newItems,
+      editing: false
+    })
+    this.getInput.value = '';
   }
 
   componentDidMount() {
-    base.syncState('items',{
-      context:this,
-      state:'items',
-      asArray:true,
+    base.syncState('items', {
+      context: this,
+      state: 'items',
+      asArray: true,
       then() {
-        this.setState({loading:false})
+        this.setState({ loading: false })
       }
     })
   }
 
   render() {
-    if(this.state.editing) {
+    if (this.state.editing) {
       var form = <form onSubmit={this.edit}>
-                      <div className="input-field">
-                    <input placeholder="Edit Item"type="text" required id="add_items" ref={(input)=>this.getInput = input} />
+        <div className="input-field">
+          <input placeholder="Edit Item" type="text" required id="add_items" ref={(input) => this.getInput = input} />
+          <button className="button">Edit</button>
 
-                    </div>
-                    <button className="button">Edit</button>
-                 </form>
+        </div>
+
+
+      </form>
     } else {
       var form = <form onSubmit={this.handleAdd}>
-      <div className="input-field">
-    <input type="text" placeholder="Add Items" required id="add_items" ref={(input)=>this.getInput = input} />
-    </div>
-        <button className="button">Add</button>
+        <div className="input-field">
+          <input type="text" placeholder="Add Items" required id="add_items" ref={(input) => this.getInput = input} />
+          <button className="button">Add</button>
+        </div>
+
+
       </form>
     }
-     return (
-      <div>
-          {form}
-        <ul>
-        {this.state.loading? <h3>Loading List...</h3>:this.state.items.map((item,index)=>{
-          return <li key={index}>{item}<span className="separater"></span><button className="button_small" onClick={()=>this.handleEdit(index)}>Edit</button><button className="button_small delete" disabled={this.state.editing} onClick={()=>this.handleRemove(index)}>X</button></li>
-        })}
+    return (
+      <div className="list-container">
+        {form}
+        <ul className="lists">
+          {this.state.loading ? <h3>Loading List...</h3> : this.state.items.map((item, index) => {
+            return <li key={index}><p className="right">{item}</p><button className="button_small" onClick={() => this.handleEdit(index)}>Edit</button><button className="button_small delete" disabled={this.state.editing} onClick={() => this.handleRemove(index)}>X</button></li>
+          })}
         </ul>
       </div>
     )
